@@ -8,7 +8,7 @@ class ItemModel {
   int? total_results;
   List<Result> results = [];
 
-  ItemModel.fromJSON(Map<String, dynamic> parsedJson) {
+  ItemModel.fromJSON(Map<String, dynamic> parsedJson, bool isRecent) {
     page = parsedJson['page'];
     total_page = parsedJson['total_page'];
     total_results = parsedJson['total_results'];
@@ -17,6 +17,20 @@ class ItemModel {
       Result result = Result(parsedJson['results'][i]);
       temp.add(result);
     }
+
+    if (!isRecent) {
+      temp.sort((a, b) {
+        return b.popularity!.compareTo(a.popularity!);
+      });
+    } else {
+      temp.sort(
+        (a, b) {
+          return DateTime.parse(b.release_date!)
+              .compareTo(DateTime.parse(a.release_date!));
+        },
+      );
+    }
+
     results = temp;
   }
 }
@@ -32,11 +46,13 @@ class Result {
   String? backdrop_path;
   String? release_date;
   bool? adult;
+  double? popularity;
   String? overview;
 
   Result(result) {
     vote_count = result['vote_count'].toString();
     id = result['id'];
+    popularity = result['popularity'];
     video = result['video'];
     vote_average = result['vote_average'];
     title = result['title'].toString();

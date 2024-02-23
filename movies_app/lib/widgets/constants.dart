@@ -2,5 +2,5 @@
 
 import 'package:flutter/material.dart';
 
-final Color bgcolor = Color.fromARGB(255, 37, 38, 52);
+final Color bgcolor = Color.fromARGB(255, 20, 20, 33);
 final Color textcolor = Color.fromARGB(108, 255, 255, 255);

@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:movies_app/models/genre_model.dart';
 import 'package:movies_app/models/item_model.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 
@@ -16,11 +17,31 @@ class ApiService {
     dio.interceptors.add(PrettyDioLogger());
   }
 
-  Future<ItemModel> fetchMovieList() async {
+  Future<ItemModel> fetchMovieList(bool isRecent) async {
     final response = await dio
         .get("https://api.themoviedb.org/3/movie/now_playing?api_key=$apikey");
     if (response.statusCode == 200) {
-      return ItemModel.fromJSON(response.data);
+      return ItemModel.fromJSON(response.data, isRecent);
+    } else {
+      throw Exception('Failed to load post');
+    }
+  }
+
+  Future<ItemModel> fetchPopularMovieList(bool isRecent) async {
+    final response = await dio
+        .get("https://api.themoviedb.org/3/movie/popular?api_key=$apikey");
+    if (response.statusCode == 200) {
+      return ItemModel.fromJSON(response.data, isRecent);
+    } else {
+      throw Exception('Failed to load post');
+    }
+  }
+
+  Future<GenreModel> fetchGenresList() async {
+    final response = await dio
+        .get("https://api.themoviedb.org/3/genre/movie/list?api_key=$apikey");
+    if (response.statusCode == 200) {
+      return GenreModel.fromJSON(response.data);
     } else {
       throw Exception('Failed to load post');
     }
